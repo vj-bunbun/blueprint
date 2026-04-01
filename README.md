@@ -2,7 +2,7 @@
 
 **A build system for system prompts.**
 
-Every AI app hand-builds its system prompt as string concatenation. Blueprint gives it structure — ordered sections, token budgets, cache boundaries, and provider-specific output. Same source files, any provider.
+Most AI apps manage their system prompt as a single string — hard to reuse, hard to version, and impossible to optimize across providers. Blueprint gives it structure — ordered sections, token budgets, cache boundaries, and provider-specific output. Same source files, any provider.
 
 ## How It Works
 
