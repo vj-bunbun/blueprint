@@ -18,17 +18,21 @@ import { join, resolve } from 'path';
  * Paths are relative to baseDir. Single-depth only.
  */
 export function resolveIncludes(text: string, baseDir: string): string {
-  return text.replace(/\{\{include\s+(.+?)\}\}/g, (_match, path: string) => {
-    const fullPath = resolve(baseDir, path.trim());
+  // Only match {{include}} directives that appear alone on a line.
+  // This prevents literal {{include}} text in documentation or included
+  // content from being resolved (single-depth guarantee).
+  return text.replace(/^(\{\{include\s+(.+?)\}\})\s*$/gm, (_match, _full, path: string) => {
+    const trimmedPath = path.trim();
+    const fullPath = resolve(baseDir, trimmedPath);
     if (!existsSync(fullPath)) {
-      console.warn(`Warning: include not found: ${path.trim()}`);
-      return `[include not found: ${path.trim()}]`;
+      console.warn(`Warning: include not found: ${trimmedPath}`);
+      return `[include not found: ${trimmedPath}]`;
     }
     try {
       return readFileSync(fullPath, 'utf-8').trim();
     } catch {
-      console.warn(`Warning: could not read include: ${path.trim()}`);
-      return `[include error: ${path.trim()}]`;
+      console.warn(`Warning: could not read include: ${trimmedPath}`);
+      return `[include error: ${trimmedPath}]`;
     }
   });
 }
