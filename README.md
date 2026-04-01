@@ -124,6 +124,55 @@ bun run build.ts --provider openai       # JSON system message
 bun run build.ts --provider google       # JSON systemInstruction
 ```
 
+### Using with Claude (Anthropic)
+
+Build your prompt, then drop it into your API call:
+
+```bash
+bun run build.ts --dir ~/my-prompts --provider anthropic --execute --output prompt.json
+```
+
+```python
+import anthropic, json
+
+client = anthropic.Anthropic()
+system = json.load(open("prompt.json"))
+
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    system=system,  # Blueprint's output goes here
+    messages=[{"role": "user", "content": "Review this PR..."}],
+)
+```
+
+Static sections get `cache_control` automatically — Anthropic caches them so you only pay full price for the dynamic parts.
+
+### Using with OpenAI
+
+```bash
+bun run build.ts --dir ~/my-prompts --provider openai --execute --output prompt.json
+```
+
+```python
+from openai import OpenAI
+import json
+
+client = OpenAI()
+system_msg = json.load(open("prompt.json"))
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[system_msg, {"role": "user", "content": "Review this PR..."}],
+)
+```
+
+### Using with any AI (clipboard)
+
+```bash
+bun run build.ts --dir ~/my-prompts --execute --clipboard
+# Paste into ChatGPT, Claude, Gemini, or any AI chat
+```
+
 ## Variables
 
 Simple `{{var_name}}` substitution — not a template engine.
