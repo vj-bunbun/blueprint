@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+scripts/node_modules/
+
+# Bun
+bun.lock
+scripts/bun.lock
+
+# Obsidian
+.obsidian/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Output
+*.output
