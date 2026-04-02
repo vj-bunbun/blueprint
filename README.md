@@ -224,6 +224,18 @@ bun run build.ts --dir ~/my-prompts --execute --clipboard
 
 They compose naturally but work independently. No shared code, no import dependency. Both read `~/.airc` for their defaults — Blackbox stores `defaultVault`, Blueprint stores `defaultPromptDir`.
 
+## Works with Claude Code
+
+Claude Code loads `CLAUDE.md` from your working directory on every conversation start. Blueprint writes directly into that pipeline:
+
+```bash
+bun run build.ts --dir ~/my-prompts --execute --output ~/my-project/CLAUDE.md
+```
+
+Every new Claude Code conversation — and every sub-agent it spawns — automatically has your assembled prompt. No clipboard paste needed.
+
+**Why this matters for cost:** Claude Code makes many API calls per session (one per tool-use loop). Anthropic caches repeated system prompt prefixes at reduced rates. Blueprint's static/dynamic split aligns with this — stable sections (identity, tools, instructions) are cached across all calls, dynamic sections (context, memory) pay full price but change per build.
+
 ## Design Principles
 
 1. **You own everything** — plain files on your disk, no cloud, no database

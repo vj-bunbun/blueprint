@@ -37,7 +37,7 @@ export interface ParsedSection {
 export function discoverSections(dir: string): ParsedSection[] {
   if (!existsSync(dir)) return [];
 
-  const files = readdirSync(dir).filter(f => f.endsWith('.md'));
+  const files = readdirSync(dir).filter(f => f.endsWith('.md') && !f.startsWith('_'));
   const sections: ParsedSection[] = [];
 
   for (const file of files) {
